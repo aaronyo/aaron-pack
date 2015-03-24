@@ -1,4 +1,4 @@
-;; Remove Gabe's key bindings for arrows
+; Remove Gabe's key bindings for arrows
 (dolist (elt '("<left>" "<right>" "<up>" "<down>"))
   (progn
    (global-unset-key (kbd elt))))
@@ -26,7 +26,6 @@
 ;; C-]
 (global-set-key (kbd "C-[ [ w r") 'windmove-right)
 
-
 ;; Flycheck will handle js errors with jshint
 (setq
  js2-mode-show-parse-errors nil
@@ -47,3 +46,12 @@
 ;;    (add-hook hook 'rainbow-delimiters-mode))
 (add-hook 'js2-mode-hook 'context-coloring-mode)
 (add-hook 'js2-mode-hook 'flycheck-mode)
+
+;; 80 column fill
+(setq-default fill-column 80)
+
+;; 80 column rule
+(require 'fill-column-indicator)
+(add-hook 'js2-mode-hook 'fci-mode)
+(setq fci-rule-color "color-241")
+(setq fci-rule-character ?.)
