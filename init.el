@@ -55,3 +55,7 @@
 (add-hook 'js2-mode-hook 'fci-mode)
 (setq fci-rule-color "color-241")
 (setq fci-rule-character ?.)
+
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(global-set-key [f9] 'neotree-find)
