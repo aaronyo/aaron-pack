@@ -26,26 +26,56 @@
 ;; C-]
 (global-set-key (kbd "C-[ [ w r") 'windmove-right)
 
-;; Flycheck will handle js errors with jshint
-(setq
- js2-mode-show-parse-errors nil
- js2-mode-show-strict-warnings nil)
+;; A string color that is neutral when context coloring
+(set-face-foreground 'font-lock-string-face "color-246")
 
+
+;; Context coloring
+(add-hook 'js2-mode-hook 'context-coloring-mode)
+(require 'context-coloring)
 (custom-set-faces
- '(context-coloring-level-1-face ((t (:foreground "color-75"))))
+ '(context-coloring-level-0-face ((t (:foreground "color-255"))))
+ '(context-coloring-level-1-face ((t (:foreground "color-81"))))
  '(context-coloring-level-2-face ((t (:foreground "color-175"))))
- '(context-coloring-level-3-face ((t (:foreground "color-143"))))
- '(context-coloring-level-4-face ((t (:foreground "brightred"))))
+ '(context-coloring-level-3-face ((t (:foreground "color-42"))))
+ '(context-coloring-level-4-face ((t (:foreground "color-27"))))
  '(context-coloring-level-5-face ((t (:foreground "color-92"))))
- '(context-coloring-level-6-face ((t (:foreground "color-202"))))
- '(flycheck-error
-   ((t (:inherit default :foreground "red" :underline (:color "red"))))))
+ '(context-coloring-level-6-face ((t (:foreground "color-23"))))
+ )
 
 ;;(require 'rainbow-delimiters)
 ;;(dolist (hook '(js2-mode-hook js-mode-hook json-mode-hook))
 ;;    (add-hook hook 'rainbow-delimiters-mode))
-(add-hook 'js2-mode-hook 'context-coloring-mode)
+
+(custom-set-variables
+ '(js2-bounce-indent-p nil))
+
+;; Flycheck syntax checking
+(setq
+ js2-mode-show-parse-errors nil
+ js2-mode-show-strict-warnings nil)
+(custom-set-faces
+ '(flycheck-error
+   ((t (:inherit default :foreground "red" :underline (:color "red"))))))
 (add-hook 'js2-mode-hook 'flycheck-mode)
+(setq flycheck-idle-change-delay 1);
+
+(flycheck-def-config-file-var
+    flycheck-jscs
+    javascript-jscs
+    ".jscsrc"
+  :safe #'stringp)
+
+(flycheck-define-checker javascript-jscs
+  "A jscs code style checker."
+  :command ("jscs" "--reporter" "checkstyle"
+            (config-file "--config" flycheck-jscs) source)
+  :error-parser flycheck-parse-checkstyle
+  :modes (js-mode js2-mode js3-mode)
+  :next-checkers (javascript-jshint))
+
+(provide 'flycheck-jscs)
+(add-to-list 'flycheck-checkers 'javascript-jscs)
 
 ;; 80 column fill
 (setq-default fill-column 80)
@@ -59,3 +89,12 @@
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key [f9] 'neotree-find)
+
+(require 'git-gutter)
+(global-git-gutter-mode +1)
+
+(require 'toggle-quotes)
+(global-set-key (kbd "C-[ [ ' '") 'toggle-quotes)
+
+(require 'floobits)
+(floobits-remove-hooks)
