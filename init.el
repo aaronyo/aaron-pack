@@ -43,6 +43,13 @@
  '(context-coloring-level-6-face ((t (:foreground "color-23"))))
  )
 
+(add-hook 'js2-mode-hook
+          (lambda ()
+            ;; Scan the file for nested code blocks
+            (imenu-add-menubar-index)
+            ;; Activate the folding mode
+            (hs-minor-mode t)))
+
 ;;(require 'rainbow-delimiters)
 ;;(dolist (hook '(js2-mode-hook js-mode-hook json-mode-hook))
 ;;    (add-hook hook 'rainbow-delimiters-mode))
